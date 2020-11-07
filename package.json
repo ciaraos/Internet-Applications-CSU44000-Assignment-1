@@ -1,0 +1,16 @@
+{
+  "name": "internet-applications-csu44000-assignment-1",
+  "version": "1.0.0",
+  "description": "Simple Internet Application demonstrating a reactive client running in an Internet browser using Vue.js and a server-side application using at least one API primitive ",
+  "main": "Server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Ciara O'Sullivan",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1"
+  }
+}
