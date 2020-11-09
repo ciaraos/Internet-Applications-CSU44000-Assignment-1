@@ -16,16 +16,16 @@ app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname + "/Client.html"))})
 app.get("/weather/:location", checkWeather)
 
-//Summary of the weather for the next five days showing: date, city, description, temperature, rainfall, windspeed
-//returns JSON of forecast to be printed on screen 
+//Gets a summary of the weather for the next five days showing: date, city, description, temperature, rainfall, windspeed
+//Returns JSON of forecast to be sent to the Client side and displayed on the web
 async function checkWeather(req, res) {
-    //make API call
+    //Make API call
     let city = req.params.location
     let url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${APIkey}`
     let response = await fetch(url)
     let weatherData = await response.json()
 
-    //define variables 
+    //Define variables 
     let what2pack, rain, description, date, feels_like = ''
     let temp, windSpeed = 0
     let forecastArray = {
@@ -33,10 +33,10 @@ async function checkWeather(req, res) {
       temp4packing: '',
       forecastList :[]
     }
-    umbrella = 'No umbrella' //set to no as default
+    umbrella = 'No umbrella' 
     temp4packing = ' ' 
 
-    //parse data 
+    //Parse data 
     for(var index = 0; index < (weatherData.list.length); index++){
         date = weatherData.list[index].dt_txt
         description = weatherData.list[index].weather[0].description
@@ -46,6 +46,7 @@ async function checkWeather(req, res) {
         windSpeed = weatherData.list[index].wind.speed;
         what2pack = checkPacking(weatherData.list[index].main.temp, forecastArray)
 
+        //Push parsed data to an array (for each iteration) 
         forecastArray.forecastList.push(
             {
                 Date: date,
@@ -59,12 +60,13 @@ async function checkWeather(req, res) {
             }
         )
     }
+    //Return parsed data as a json (send to client side)
     res.json(forecastArray)
 }
 
+//Get mm of rain and convert it to a string, tell user if they should pack an umbrella 
+//Returns the amount of rain in a string 
 function checkRain(weatherData, forecastArray){
-    //Get mm of rain and convert it to a string
-    //Tell user if they should pack an umbrella 
     if(weatherData != undefined){
         if(JSON.stringify(weatherData).substr(6,5) != ''){
             rain = parseFloat((JSON.stringify(weatherData)).substr(6, 5))
@@ -77,8 +79,12 @@ function checkRain(weatherData, forecastArray){
     return rain
 }
 
+/*Tell user how to pack for the weather forecast; 
+    Pack for cold if temp ranges from -10 to 10
+    Pack for warm if temp ranges from 10 to 20
+    Pack for hot if temp is greater than 20
+Returns what2pack as a string*/
 function checkPacking(temp, forecastArray){
-    //Tell user how to pack for the weather forecast 
     if(temp >= -10 && temp <= 10){
         what2pack = "COLD"
     }
