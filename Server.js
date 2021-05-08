@@ -10,7 +10,7 @@ app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 //For API call 
 const fetch = require("node-fetch")
-const APIkey = "3e2d927d4f28b456c6bc662f34350957"
+const APIkey = ""
 
 app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname + "/Client.html"))})
